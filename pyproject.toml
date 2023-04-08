@@ -8,12 +8,11 @@ description = "Jepsen distributed katas"
 authors = ["Dimitri Merejkowsky <dimitri@dmerej.info>"]
 readme = "README.md"
 license = "BSD-3-Clause"
-repository = ""
-# documentation = ""
 
-[tool.poetry.urls]
-# Changelog = ""
-# Issues = ""
+
+[tool.poetry.scripts]
+jepsen-echo = "jepsen_katas.echo:main"
+jepsen-unique-ids = "jepsen_katas.unique_ids:main"
 
 [tool.poetry.dependencies]
 python = "^3.9"
