@@ -6,23 +6,12 @@ from typing import Any
 
 
 @dataclass
-class Init:
-    node_id: str
-    node_ids: list[str]
-
-
-@dataclass
 class InMessage:
     src: str
     dest: str
     msg_id: int
     type: str
     body: dict[str, Any]
-
-
-@dataclass
-class InitOk:
-    pass
 
 
 @dataclass
@@ -33,6 +22,17 @@ class OutMessage:
     in_reply_to: int
     type: str
     body: Any
+
+
+@dataclass
+class Init:
+    node_id: str
+    node_ids: list[str]
+
+
+@dataclass
+class InitOk:
+    pass
 
 
 def read_line() -> Any:
