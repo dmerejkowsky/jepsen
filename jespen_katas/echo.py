@@ -1,10 +1,9 @@
 #!/bin/python
 import sys
-from copy import copy
 import json
-from typing import Any, cast
+from typing import Any
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 
 
 @dataclass
@@ -106,8 +105,6 @@ class EchoServer:
 def parse_message(json_message: dict[str, Any]) -> InMessage | None:
     json_body = json_message["body"]
     message_type = json_body["type"]
-    src = json_message["src"]
-    dest = json_message["dest"]
     body: None | Echo | Init = None
     if message_type == "init":
         body = Init(json_body["msg_id"], json_body["node_id"], json_body["node_ids"])

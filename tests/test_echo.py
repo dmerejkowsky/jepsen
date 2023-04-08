@@ -1,4 +1,3 @@
-from typing import cast
 from jespen_katas.echo import (
     EchoServer,
     Echo,

@@ -16,7 +16,7 @@ repository = ""
 # Issues = ""
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.9"
 
 [tool.poetry.group.dev.dependencies]
 # Task runner
@@ -29,10 +29,10 @@ pytest-cov = "^2.10"
 
 # Linters
 black = "^22.3"
-flake8 = "^5.0"
-flake8-bugbear = "^21.4.3"
-flake8-comprehensions = "^3.4.0"
-pep8-naming = "^0.11.1"
+flake8 = "^6.0"
+flake8-bugbear = "^23.3"
+flake8-comprehensions = "^3.11"
+pep8-naming = "^0.13"
 isort = "^5.7.0"
 mypy = "0.960"
 
