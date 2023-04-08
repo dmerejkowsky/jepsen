@@ -1,9 +1,8 @@
 #!/bin/python
-import sys
 import json
-from typing import Any
-
+import sys
 from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass
