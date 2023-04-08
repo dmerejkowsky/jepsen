@@ -1,4 +1,4 @@
-from jespen_katas.echo import (
+from jepsen_katas.echo import (
     Echo,
     EchoOk,
     EchoServer,

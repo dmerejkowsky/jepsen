@@ -2,7 +2,7 @@
 profile = "black"
 
 [tool.poetry]
-name = "jespen_katas"
+name = "jepsen_katas"
 version = "0.0.1"
 description = "Jepsen distributed katas"
 authors = ["Dimitri Merejkowsky <dimitri@dmerej.info>"]

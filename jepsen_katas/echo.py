@@ -11,19 +11,9 @@ class Echo:
 
 
 @dataclass
-class EchoOk:
-    echo: str
-
-
-@dataclass
 class Init:
     node_id: str
     node_ids: list[str]
-
-
-@dataclass
-class InitOk:
-    pass
 
 
 @dataclass
@@ -32,6 +22,16 @@ class InMessage:
     dest: str
     msg_id: int
     body: Echo | Init
+
+
+@dataclass
+class EchoOk:
+    echo: str
+
+
+@dataclass
+class InitOk:
+    pass
 
 
 @dataclass
@@ -74,7 +74,6 @@ class EchoServer:
 
         assert self.node_id, "should have got an 'init' message"
         return OutMessage(self.node_id, src, self.next_message_id, message.msg_id, body)
-        return None
 
     def on_init(self, init: Init) -> InitOk:
         self.node_id = init.node_id
