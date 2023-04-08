@@ -22,7 +22,7 @@ class InMessage:
 
 @dataclass
 class InitOk:
-    type: str = "init_ok"
+    pass
 
 
 @dataclass
