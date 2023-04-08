@@ -1,0 +1,10 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v1.1.3-11-g38d7a4f
+_src_path: git+https://git.sr.ht/~dmerej/copier-python
+author_email: dimitri@dmerej.info
+author_name: Dimitri Merejkowsky
+package_import_name: jespen_katas
+project_description: Jepsen distributed katas
+project_name: jespen_katas
+project_version: 0.0.1
+
