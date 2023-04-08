@@ -34,7 +34,7 @@ flake8-bugbear = "^23.3"
 flake8-comprehensions = "^3.11"
 pep8-naming = "^0.13"
 isort = "^5.7.0"
-mypy = "0.960"
+mypy = "^1.2"
 
 # Deps scanning
 safety = "^1.9.0"
