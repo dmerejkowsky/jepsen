@@ -27,7 +27,7 @@ def test_parse_init() -> None:
     assert message
     assert isinstance(message.body, Init)
     init = message.body
-    assert init.msg_id == 1
+    assert message.msg_id == 1
     assert init.node_id == "n1"
     assert init.node_ids == ["n1"]
 
@@ -84,8 +84,8 @@ def test_serialize_echo_ok() -> None:
 def test_reply_to_init() -> None:
     server = EchoServer()
     server.next_message_id = 12
-    init = Init(1, "n1", ["n1"])
-    message = InMessage("c1", "n1", init)
+    init = Init("n1", ["n1"])
+    message = InMessage("c1", "n1", 1, init)
     response = server.on_message(message)
 
     assert response
@@ -100,8 +100,8 @@ def test_reply_to_echo() -> None:
     server = EchoServer()
     server.node_id = "n1"
     server.next_message_id = 12
-    echo = Echo(1, "yolo")
-    message = InMessage("c1", "n1", echo)
+    echo = Echo("yolo")
+    message = InMessage("c1", "n1", 1, echo)
     response = server.on_message(message)
 
     assert response

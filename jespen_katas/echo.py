@@ -7,7 +7,6 @@ from typing import Any
 
 @dataclass
 class Echo:
-    msg_id: int
     echo: str
 
 
@@ -18,7 +17,6 @@ class EchoOk:
 
 @dataclass
 class Init:
-    msg_id: int
     node_id: str
     node_ids: list[str]
 
@@ -32,6 +30,7 @@ class InitOk:
 class InMessage:
     src: str
     dest: str
+    msg_id: int
     body: Echo | Init
 
 
@@ -74,7 +73,7 @@ class EchoServer:
             return None
 
         assert self.node_id, "should have got an 'init' message"
-        return OutMessage(self.node_id, src, self.next_message_id, request.msg_id, body)
+        return OutMessage(self.node_id, src, self.next_message_id, message.msg_id, body)
         return None
 
     def on_init(self, init: Init) -> InitOk:
@@ -106,15 +105,17 @@ def parse_message(json_message: dict[str, Any]) -> InMessage | None:
     message_type = json_body["type"]
     body: None | Echo | Init = None
     if message_type == "init":
-        body = Init(json_body["msg_id"], json_body["node_id"], json_body["node_ids"])
+        body = Init(json_body["node_id"], json_body["node_ids"])
     elif message_type == "echo":
-        body = Echo(json_body["msg_id"], json_body["echo"])
+        body = Echo(json_body["echo"])
 
     if not body:
         log("Unknown message type", message_type)
         return None
 
-    message = InMessage(json_message["src"], json_message["dest"], body)
+    message = InMessage(
+        json_message["src"], json_message["dest"], json_body["msg_id"], body
+    )
     return message
 
 

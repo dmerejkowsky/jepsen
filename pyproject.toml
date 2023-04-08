@@ -23,9 +23,8 @@ python = "^3.9"
 invoke = "^1.5.0"
 
 # Tests
-coverage = "^5.2"
-pytest = "^6.2.1"
-pytest-cov = "^2.10"
+pytest = "^7.2"
+pytest-cov = "^4.0"
 
 # Linters
 black = "^23.3"
