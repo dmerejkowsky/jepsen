@@ -13,6 +13,7 @@ license = "BSD-3-Clause"
 [tool.poetry.scripts]
 jepsen-echo = "jepsen_katas.echo:main"
 jepsen-unique-ids = "jepsen_katas.unique_ids:main"
+jepsen-broadcast = "jepsen_katas.broadcast:main"
 
 [tool.poetry.dependencies]
 python = "^3.9"

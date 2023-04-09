@@ -22,10 +22,10 @@ class UniqueIdsNode(Node):
     def parse_generate(self, body: dict[str, Any]) -> Generate:
         return Generate()
 
-    def handle_generate(self, generate: Generate) -> tuple[str, GenerateOk]:
+    def handle_generate(self, dest: str, in_reply_to: int, generate: Generate) -> None:
         self._counter += 1
         id = f"{self.node_id}_{self._counter}"
-        return "generate_ok", GenerateOk(id)
+        self.send(dest, in_reply_to, "generate_ok", GenerateOk(id))
 
 
 def main() -> None:

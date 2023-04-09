@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from jepsen_katas.node import Node
+from jepsen_katas.node import Node, Sender
 
 
 @dataclass
@@ -15,14 +15,14 @@ class EchoOk:
 
 
 class EchoNode(Node):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, sender: Sender | None = None) -> None:
+        super().__init__(sender)
 
     def parse_echo(self, body: dict[str, Any]) -> Echo:
         return Echo(body["echo"])
 
-    def handle_echo(self, echo: Echo) -> tuple[str, EchoOk]:
-        return "echo_ok", EchoOk(echo.echo)
+    def handle_echo(self, dest: str, in_reply_to: int, echo: Echo) -> None:
+        self.send(dest, in_reply_to, "echo_ok", EchoOk(echo.echo))
 
 
 def main() -> None:

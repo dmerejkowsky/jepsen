@@ -1,8 +1,9 @@
 #!/bin/python
+from copy import copy
 import json
 import sys
 from dataclasses import asdict, dataclass
-from typing import Any
+from typing import Any, Protocol
 
 
 @dataclass
@@ -46,12 +47,52 @@ def log(*args: Any) -> None:
     print(*args, file=sys.stderr)
 
 
-class Node:
-    def __init__(self) -> None:
-        self.node_id: str = ""
-        self.next_message_id = 0
+class Sender(Protocol):
+    def send(
+        self,
+        src: str,
+        dest: str,
+        message_id: int,
+        in_reply_to: int,
+        type: str,
+        body: Any,
+    ) -> None:
+        pass
 
-    def on_message(self, message: InMessage) -> OutMessage | None:
+
+class JsonStdoutSender(Sender):
+    def send(
+        self,
+        src: str,
+        dest: str,
+        message_id: int,
+        in_reply_to: int,
+        type: str,
+        body: Any,
+    ) -> None:
+        json_message = {
+            "src": src,
+            "dest": dest,
+            "body": {
+                "msg_id": message_id,
+                "in_reply_to": in_reply_to,
+                "type": type,
+                **asdict(body),
+            },
+        }
+        print(json.dumps(json_message), flush=True)
+
+
+class Node:
+    def __init__(self, sender: Sender | None = None) -> None:
+        self.node_id: str = ""
+        self.message_id = 0
+        if not sender:
+            self._sender: Sender = JsonStdoutSender()
+        else:
+            self._sender = sender
+
+    def on_message(self, message: InMessage) -> None:
         message_type = message.type
         body = message.body
 
@@ -69,25 +110,19 @@ class Node:
             log("Cannot handle", message_type)
             return None
 
-        response_type, response = handle_method(body)
+        handle_method(message.src, message.msg_id, body)
 
-        self.next_message_id += 1
-        return OutMessage(
-            self.node_id,
-            message.src,
-            self.next_message_id,
-            message.msg_id,
-            response_type,
-            response,
-        )
+    def send(self, dest: str, in_reply_to: int, type: str, body: Any) -> None:
+        self.message_id += 1
+        self._sender.send(self.node_id, dest, self.message_id, in_reply_to, type, body)
 
     def parse_init(self, body: dict[str, Any]) -> Init:
         return Init(body["node_id"], body["node_ids"])
 
-    def handle_init(self, init: Init) -> tuple[str, InitOk]:
+    def handle_init(self, src: str, message_id: int, init: Init) -> None:
         self.node_id = init.node_id
         log("Node id is", self.node_id)
-        return "init_ok", InitOk()
+        self.send(src, message_id, "init_ok", init)
 
     def run(self) -> None:
         while True:
@@ -98,11 +133,7 @@ class Node:
             message = parse_message(json_message)
             if not message:
                 continue
-            new_message = self.on_message(message)
-            if not new_message:
-                continue
-            json_message = message_to_dict(new_message)
-            print(json.dumps(json_message), flush=True)
+            self.on_message(message)
 
 
 def parse_message(json_message: dict[str, Any]) -> InMessage:
@@ -115,16 +146,3 @@ def parse_message(json_message: dict[str, Any]) -> InMessage:
         json_body,
     )
     return message
-
-
-def message_to_dict(message: OutMessage) -> dict[str, Any]:
-    return {
-        "src": message.src,
-        "dest": message.dest,
-        "body": {
-            "msg_id": message.msg_id,
-            "in_reply_to": message.in_reply_to,
-            "type": message.type,
-            **asdict(message.body),
-        },
-    }
